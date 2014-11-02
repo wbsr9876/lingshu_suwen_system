@@ -13,92 +13,105 @@ namespace LSBuilderCore
         private const string configDir = ".LBSConfig";
         private const string configFilename = "workspace.lsb";
         //lbsxml string
-        private const string xs_root = "Workspace";
-        private const string xs_serverList = "ServerList";
-        private const string xs_server = "Server";
-        private const string xs_nameAttr = "Name";
-        private const string xs_countAttr = "Count";
-        private const string xs_pathAttr = "Path";
+
         public bool loaded = false;
         private XmlDocument doc = new XmlDocument();
         private DirectoryInfo path;
         private List<Server> serverList = new List<Server>();
+        private int serverCount = 0;
+        private CMakeFile cmakeFile = new CMakeFile();
 
-        public enum ErrorCode
-        {
-            EC_SUCCESS = 0x0,
-            EC_NO_DATA = 0x1,
-            EC_WRONG_FILE = 0x2,
-            EC_INVAILD_WORKSPACE = 0x3,
-            EC_WRONG_SPACE_NAME = 0x4,
-            EC_UNKNOWN_ERROR = 0xFFFFFFF 
-        };
-        public ErrorCode Load(string filePath)
+        public int Load(string filePath)
         {
             string xmlPath = filePath + "/" + configDir + "/" + configFilename;
             if (!File.Exists(xmlPath))
-                return ErrorCode.EC_INVAILD_WORKSPACE;
+                return CommonDefine.EC_NOT_EXIST | CommonDefine.CT_WORKSPACE;
       
             doc.Load(xmlPath);
-            if (doc.DocumentElement.Name != xs_root)
+            if (doc.DocumentElement.Name != CommonDefine.xs_root)
             {
-                return ErrorCode.EC_WRONG_FILE;
+                return CommonDefine.EC_MISMATCH | CommonDefine.CT_WORKSPACE;
             }
             path = new DirectoryInfo(filePath);
-            if (path.Name != doc.DocumentElement.GetAttribute(xs_nameAttr))
-                return ErrorCode.EC_WRONG_SPACE_NAME;
-
-            foreach(XmlElement listNode in doc.DocumentElement.GetElementsByTagName(xs_serverList))
+            if (path.Name != doc.DocumentElement.GetAttribute(CommonDefine.xs_nameAttr))
+                return CommonDefine.EC_MISMATCH | CommonDefine.CT_WORKSPACE;
+            if (cmakeFile.Load(filePath) != CommonDefine.EC_SUCCESS)
             {
-                int count = int.Parse(listNode.GetAttribute(xs_countAttr));
-                foreach(XmlElement serverNode in listNode.GetElementsByTagName(xs_server))
+                int ret = cmakeFile.Create(filePath);
+                if (ret != CommonDefine.EC_SUCCESS)
+                    return ret;
+            }
+
+            serverCount = 0;
+            foreach (XmlElement listNode in doc.DocumentElement.GetElementsByTagName(CommonDefine.xs_serverList))
+            {
+                serverCount += int.Parse(listNode.GetAttribute(CommonDefine.xs_countAttr));
+                foreach (XmlElement serverNode in listNode.GetElementsByTagName(CommonDefine.xs_server))
                 {
-                    string serverName = serverNode.GetAttribute(xs_nameAttr);
-                    string serverPath = serverNode.GetAttribute(xs_pathAttr);
+                    string serverName = serverNode.GetAttribute(CommonDefine.xs_nameAttr);
+                    string serverPath = serverNode.GetAttribute(CommonDefine.xs_pathAttr);
+                    Server server = new Server(this);
+                    server.Load(serverName, serverPath);
                 }
             }
             loaded = true;
-            return ErrorCode.EC_SUCCESS;
+            return CommonDefine.EC_SUCCESS;
         }
 
-        public ErrorCode Save()
+        public int Save()
         {
             if(loaded)
             {
-                doc.Save(configFilename);
-                return ErrorCode.EC_SUCCESS;
+                doc.RemoveAll();
+                XmlDeclaration decl = doc.CreateXmlDeclaration("1.0", null, null);
+                doc.AppendChild(decl);
+                //XmlProcessingInstruction proc = doc.CreateProcessingInstruction("xml-stylesheet", "type=\"text/lsb\" href=\"test.lsb\"");
+                //doc.AppendChild(proc);
+                //XmlDocumentType doctype = doc.CreateDocumentType("server", null, null, null);
+                //doc.AppendChild(doctype);
+                XmlElement rootElement = doc.CreateElement(CommonDefine.xs_root);
+                rootElement.SetAttribute(CommonDefine.xs_nameAttr, path.Name);
+                XmlElement serverListElement = doc.CreateElement(CommonDefine.xs_serverList);
+                serverListElement.SetAttribute(CommonDefine.xs_countAttr, serverCount.ToString());
+                foreach(Server server in serverList)
+                {
+                    XmlElement serverElement = doc.CreateElement(CommonDefine.xs_server);
+                    serverElement.SetAttribute(CommonDefine.xs_nameAttr,server.Name);
+                    serverElement.SetAttribute(CommonDefine.xs_pathAttr, server.Path);
+                    serverListElement.AppendChild(serverElement);
+                }
+                rootElement.AppendChild(serverListElement);
+                doc.AppendChild(rootElement);
+
+                doc.Save(path.FullName + "/" + configDir + "/" + configFilename);
+                return CommonDefine.EC_SUCCESS;
             }
-            return ErrorCode.EC_NO_DATA;
+            return CommonDefine.EC_INVALID | CommonDefine.CT_WORKSPACE;
         }
 
-        public ErrorCode Create(string filepath)
+        public int Create(string filepath)
         {
             if(!Directory.Exists(filepath))
-                return ErrorCode.EC_INVAILD_WORKSPACE;
+                return CommonDefine.EC_NOT_EXIST | CommonDefine.CT_WORKSPACE;
             string configPath = filepath + "/" + configDir;
             if(Directory.Exists(configPath))
                 Directory.Delete(configPath,true);
 
             DirectoryInfo di = Directory.CreateDirectory(configPath);
-            
-            if (loaded)
-                doc.RemoveAll();
+            path = di.Parent;
 
-            XmlDeclaration decl = doc.CreateXmlDeclaration("1.0", null, null);
-            doc.AppendChild(decl);
-            //XmlProcessingInstruction proc = doc.CreateProcessingInstruction("xml-stylesheet", "type=\"text/lsb\" href=\"test.lsb\"");
-            //doc.AppendChild(proc);
-            //XmlDocumentType doctype = doc.CreateDocumentType("server", null, null, null);
-            //doc.AppendChild(doctype);
-            XmlElement rootElement = doc.CreateElement(xs_root);
-            rootElement.SetAttribute(xs_nameAttr, di.Parent.Name);
-            XmlElement serverListElement = doc.CreateElement(xs_serverList);
-            serverListElement.SetAttribute(xs_countAttr,"0");
-            rootElement.AppendChild(serverListElement);
-            doc.AppendChild(rootElement);
-
-            doc.Save(di.FullName + "/" + configFilename);
-            return ErrorCode.EC_SUCCESS;
+            loaded = true;
+            return Save();
         }
+
+        public int OnCreateServer(Server server)
+        {
+            if (!loaded)
+                return CommonDefine.EC_INVALID | CommonDefine.CT_WORKSPACE;
+            serverList.Add(server);
+            serverCount++;
+            return CommonDefine.EC_SUCCESS;
+        }
+
     }
 }
