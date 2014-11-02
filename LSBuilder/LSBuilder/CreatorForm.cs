@@ -34,7 +34,7 @@ namespace LSBuilder
         private void okButton_Click(object sender, EventArgs e)
         {
             Workspace ws = new Workspace();
-            ws.Create(workspaceTextBox.Text + "/test.lsb");
+            ws.Create(workspaceTextBox.Text);
             Close();
         }
     }
