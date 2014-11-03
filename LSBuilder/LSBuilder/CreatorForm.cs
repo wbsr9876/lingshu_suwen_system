@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 using LSBuilderCore;
 
 namespace LSBuilder
@@ -36,6 +37,28 @@ namespace LSBuilder
             Workspace ws = new Workspace();
             ws.Create(workspaceTextBox.Text);
             Close();
+        }
+
+        private void workspaceTextBox_TextChanged(object sender, EventArgs e)
+        {
+            Workspace ws = new Workspace();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CreatorForm));
+            int ret = ws.Load(workspaceTextBox.Text);
+            if (!Directory.Exists(workspaceTextBox.Text))
+            {
+                resources.ApplyResources(stateLabel, "stateLabel");
+                return;
+            }
+
+            if (ret == CommonDefine.EC_SUCCESS)
+            {
+
+                resources.ApplyResources(stateLabel, "stateLabel_success");
+            }
+            else
+            {
+                resources.ApplyResources(stateLabel, "stateLabel_failed");
+            }
         }
     }
 }

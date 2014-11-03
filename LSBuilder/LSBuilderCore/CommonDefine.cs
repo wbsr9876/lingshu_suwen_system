@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace LSBuilderCore
 {
-    class CommonDefine
+    public class CommonDefine
     {
         //CLASS_TYPE
         public const int CT_WORKSPACE = 0x10000;
         public const int CT_SERVER = 0x20000;
+        public const int CT_CMAKEFILE = 0x30000;
         //ERROR_CODE
         public const int EC_SUCCESS = 0x0;
         public const int EC_INVALID = 0x1;

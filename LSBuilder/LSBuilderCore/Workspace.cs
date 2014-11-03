@@ -19,7 +19,7 @@ namespace LSBuilderCore
         private DirectoryInfo path;
         private List<Server> serverList = new List<Server>();
         private int serverCount = 0;
-        private CMakeFile cmakeFile = new CMakeFile();
+        private CMakeSln cmakeFile = new CMakeSln();
 
         public int Load(string filePath)
         {
@@ -37,7 +37,7 @@ namespace LSBuilderCore
                 return CommonDefine.EC_MISMATCH | CommonDefine.CT_WORKSPACE;
             if (cmakeFile.Load(filePath) != CommonDefine.EC_SUCCESS)
             {
-                int ret = cmakeFile.Create(filePath);
+                int ret = cmakeFile.Create(filePath,path.Name);
                 if (ret != CommonDefine.EC_SUCCESS)
                     return ret;
             }

@@ -41,8 +41,12 @@
             this.workspaceLabel = new System.Windows.Forms.Label();
             this.objectPage = new System.Windows.Forms.TabPage();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.serverNameLabel = new System.Windows.Forms.Label();
+            this.serverNameTextBox = new System.Windows.Forms.TextBox();
+            this.stateLabel = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.serverPage.SuspendLayout();
+            this.contentGroupBox.SuspendLayout();
             this.panel1.SuspendLayout();
             this.locationGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -66,6 +70,8 @@
             // 
             // contentGroupBox
             // 
+            this.contentGroupBox.Controls.Add(this.serverNameTextBox);
+            this.contentGroupBox.Controls.Add(this.serverNameLabel);
             resources.ApplyResources(this.contentGroupBox, "contentGroupBox");
             this.contentGroupBox.Name = "contentGroupBox";
             this.contentGroupBox.TabStop = false;
@@ -93,6 +99,7 @@
             // 
             // locationGroupBox
             // 
+            this.locationGroupBox.Controls.Add(this.stateLabel);
             this.locationGroupBox.Controls.Add(this.workspaceButton);
             this.locationGroupBox.Controls.Add(this.workspaceTextBox);
             this.locationGroupBox.Controls.Add(this.workspaceLabel);
@@ -111,6 +118,7 @@
             // 
             resources.ApplyResources(this.workspaceTextBox, "workspaceTextBox");
             this.workspaceTextBox.Name = "workspaceTextBox";
+            this.workspaceTextBox.TextChanged += new System.EventHandler(this.workspaceTextBox_TextChanged);
             // 
             // workspaceLabel
             // 
@@ -123,6 +131,22 @@
             this.objectPage.Name = "objectPage";
             this.objectPage.UseVisualStyleBackColor = true;
             // 
+            // serverNameLabel
+            // 
+            resources.ApplyResources(this.serverNameLabel, "serverNameLabel");
+            this.serverNameLabel.Name = "serverNameLabel";
+            // 
+            // serverNameTextBox
+            // 
+            resources.ApplyResources(this.serverNameTextBox, "serverNameTextBox");
+            this.serverNameTextBox.Name = "serverNameTextBox";
+            // 
+            // stateLabel
+            // 
+            this.stateLabel.AutoEllipsis = true;
+            resources.ApplyResources(this.stateLabel, "stateLabel");
+            this.stateLabel.Name = "stateLabel";
+            // 
             // CreatorForm
             // 
             resources.ApplyResources(this, "$this");
@@ -131,6 +155,8 @@
             this.Name = "CreatorForm";
             this.tabControl1.ResumeLayout(false);
             this.serverPage.ResumeLayout(false);
+            this.contentGroupBox.ResumeLayout(false);
+            this.contentGroupBox.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.locationGroupBox.ResumeLayout(false);
             this.locationGroupBox.PerformLayout();
@@ -152,5 +178,8 @@
         private System.Windows.Forms.GroupBox locationGroupBox;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label workspaceLabel;
+        private System.Windows.Forms.Label serverNameLabel;
+        private System.Windows.Forms.TextBox serverNameTextBox;
+        private System.Windows.Forms.Label stateLabel;
     }
 }

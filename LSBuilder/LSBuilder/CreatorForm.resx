@@ -117,16 +117,40 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="&gt;&gt;serverNameTextBox.Name" xml:space="preserve">
+    <value>serverNameTextBox</value>
+  </data>
+  <data name="&gt;&gt;serverNameTextBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;serverNameTextBox.Parent" xml:space="preserve">
+    <value>contentGroupBox</value>
+  </data>
+  <data name="&gt;&gt;serverNameTextBox.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;serverNameLabel.Name" xml:space="preserve">
+    <value>serverNameLabel</value>
+  </data>
+  <data name="&gt;&gt;serverNameLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;serverNameLabel.Parent" xml:space="preserve">
+    <value>contentGroupBox</value>
+  </data>
+  <data name="&gt;&gt;serverNameLabel.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="contentGroupBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="contentGroupBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 48</value>
+    <value>3, 86</value>
   </data>
   <data name="contentGroupBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>270, 149</value>
+    <value>270, 111</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="contentGroupBox.TabIndex" type="System.Int32, mscorlib">
@@ -195,11 +219,35 @@
   <data name="&gt;&gt;panel1.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="workspaceButton.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Right</value>
+  <data name="stateLabel.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="stateLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 43</value>
+  </data>
+  <data name="stateLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>191, 12</value>
+  </data>
+  <data name="stateLabel.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="stateLabel.Text" xml:space="preserve">
+    <value>Please input a vaild directory.</value>
+  </data>
+  <data name="&gt;&gt;stateLabel.Name" xml:space="preserve">
+    <value>stateLabel</value>
+  </data>
+  <data name="&gt;&gt;stateLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;stateLabel.Parent" xml:space="preserve">
+    <value>locationGroupBox</value>
+  </data>
+  <data name="&gt;&gt;stateLabel.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <data name="workspaceButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>235, 17</value>
+    <value>235, 11</value>
   </data>
   <data name="workspaceButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>32, 25</value>
@@ -220,16 +268,13 @@
     <value>locationGroupBox</value>
   </data>
   <data name="&gt;&gt;workspaceButton.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="workspaceTextBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
+    <value>1</value>
   </data>
   <data name="workspaceTextBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>68, 17</value>
+    <value>68, 13</value>
   </data>
   <data name="workspaceTextBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>199, 21</value>
+    <value>161, 21</value>
   </data>
   <data name="workspaceTextBox.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -244,13 +289,13 @@
     <value>locationGroupBox</value>
   </data>
   <data name="&gt;&gt;workspaceTextBox.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="workspaceLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="workspaceLabel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Left</value>
+    <value>Top</value>
   </data>
   <data name="workspaceLabel.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -277,7 +322,7 @@
     <value>locationGroupBox</value>
   </data>
   <data name="&gt;&gt;workspaceLabel.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="locationGroupBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Top</value>
@@ -286,7 +331,7 @@
     <value>3, 3</value>
   </data>
   <data name="locationGroupBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>270, 45</value>
+    <value>270, 83</value>
   </data>
   <data name="locationGroupBox.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -399,18 +444,6 @@
   <data name="okButton.Text" xml:space="preserve">
     <value>OK</value>
   </data>
-  <data name="&gt;&gt;okButton.Name" xml:space="preserve">
-    <value>okButton</value>
-  </data>
-  <data name="&gt;&gt;okButton.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;okButton.Parent" xml:space="preserve">
-    <value>panel1</value>
-  </data>
-  <data name="&gt;&gt;okButton.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
   <data name="cancelButton.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Bottom, Right</value>
   </data>
@@ -429,24 +462,39 @@
   <data name="cancelButton.Text" xml:space="preserve">
     <value>Cancel</value>
   </data>
-  <data name="&gt;&gt;cancelButton.Name" xml:space="preserve">
-    <value>cancelButton</value>
+  <data name="folderBrowserDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing">
+    <value>17, 17</value>
   </data>
-  <data name="&gt;&gt;cancelButton.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="serverNameLabel.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
-  <data name="&gt;&gt;cancelButton.Parent" xml:space="preserve">
-    <value>panel1</value>
+  <data name="serverNameLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 21</value>
   </data>
-  <data name="&gt;&gt;cancelButton.ZOrder" xml:space="preserve">
+  <data name="serverNameLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>77, 12</value>
+  </data>
+  <data name="serverNameLabel.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="serverNameLabel.Text" xml:space="preserve">
+    <value>Server Name:</value>
+  </data>
+  <data name="serverNameTextBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>91, 17</value>
+  </data>
+  <data name="serverNameTextBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 21</value>
+  </data>
+  <data name="serverNameTextBox.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
-  <metadata name="folderBrowserDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <data name="serverNameTextBox.Text" xml:space="preserve">
+    <value>SimpleServer</value>
+  </data>
+  <data name="$this.Localizable" type="System.Boolean, mscorlib">
     <value>True</value>
-  </metadata>
+  </data>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
     <value>6, 12</value>
   </data>
@@ -467,5 +515,11 @@
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
     <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="stateLabel_failed.Text" xml:space="preserve">
+    <value>failed</value>
+  </data>
+  <data name="stateLabel_success.Text" xml:space="preserve">
+    <value>success</value>
   </data>
 </root>
