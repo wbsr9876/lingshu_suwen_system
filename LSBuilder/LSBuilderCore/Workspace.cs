@@ -35,12 +35,7 @@ namespace LSBuilderCore
             path = new DirectoryInfo(filePath);
             if (path.Name != doc.DocumentElement.GetAttribute(CommonDefine.xs_nameAttr))
                 return CommonDefine.EC_MISMATCH | CommonDefine.CT_WORKSPACE;
-            if (cmakeFile.Load(filePath) != CommonDefine.EC_SUCCESS)
-            {
-                int ret = cmakeFile.Create(filePath,path.Name);
-                if (ret != CommonDefine.EC_SUCCESS)
-                    return ret;
-            }
+            cmakeFile.Load(filePath);
 
             serverCount = 0;
             foreach (XmlElement listNode in doc.DocumentElement.GetElementsByTagName(CommonDefine.xs_serverList))

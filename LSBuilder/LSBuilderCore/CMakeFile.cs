@@ -11,6 +11,11 @@ namespace LSBuilderCore
     {
         protected string path;
         protected bool loaded = false;
+        public bool Loaded
+        {
+            get { return loaded; }
+            //set { loaded = value; }
+        }
         protected string minVersion;
         protected string projectName;
         protected List<string[]> subDirList = new List<string[]>();// src_dir bin_dir
