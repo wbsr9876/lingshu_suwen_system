@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LSBuilder", "LSBuilder\LSBuilder.csproj", "{C52B871A-0646-4A5F-A2E2-86499CD832A9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LSBuilderCore", "LSBuilderCore\LSBuilderCore.csproj", "{18170E49-F436-4DC7-8188-EEED9EE14986}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LSDataCore", "LSDataCore\LSDataCore.csproj", "{C6BA221F-3FCC-485A-92EC-15F196F106EB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{18170E49-F436-4DC7-8188-EEED9EE14986}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18170E49-F436-4DC7-8188-EEED9EE14986}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18170E49-F436-4DC7-8188-EEED9EE14986}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6BA221F-3FCC-485A-92EC-15F196F106EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6BA221F-3FCC-485A-92EC-15F196F106EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6BA221F-3FCC-485A-92EC-15F196F106EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6BA221F-3FCC-485A-92EC-15F196F106EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
