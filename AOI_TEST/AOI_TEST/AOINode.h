@@ -2,14 +2,14 @@
 #define _AOI_NODE_H_
 
 #include <memory>
-#include "AOIPoint.h"
+#include "AOIVector.h"
 
 template<int nDims> class AOINode
 {
 public:
 	AOINode<nDims>* m_pPrev[nDims];
 	AOINode<nDims>* m_pNext[nDims];
-	AOIPoint<nDims> m_pos;
+	AOIVector<nDims> m_pos;
 	struct COUNTER
 	{
 		uint64_t uKey;
@@ -17,7 +17,7 @@ public:
 	}m_stCounter;
 	
 public:
-	AOINode(const AOIPoint<nDims>& pos)
+	AOINode(const AOIVector<nDims>& pos)
 		: m_pos(pos)
 	{
 		memset(m_pPrev, 0, sizeof(m_pPrev));
@@ -34,7 +34,7 @@ public:
 	{
 
 	}
-	void SetPos(const AOIPoint<nDims>& pos)
+	void SetPos(const AOIVector<nDims>& pos)
 	{
 		m_pos = pos;
 	}

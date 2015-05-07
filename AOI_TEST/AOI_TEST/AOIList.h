@@ -28,9 +28,22 @@ public:
 	{
 
 	}
+	AOIList()
+		: m_nDim(-1)
+		, m_pHead(NULL)
+		, m_pTail(NULL)
+		, m_pResult(NULL)
+	{
+
+	}
 	~AOIList()
 	{
 
+	}
+
+	void SetDim(int nDim)
+	{
+		m_nDim = nDim;
 	}
 
 	void SetResult(std::vector<AOINode<nDims>*>* pResult)
@@ -185,8 +198,8 @@ public:
 		}
 		Remove(pNode);
 	}
-
-	void Move(AOINode<nDims>* pNode,const AOIPoint<nDims>& newPos, float fBroadcastMin, float fBroadcastMax, uint64_t uKey, int nStep = AOI_STEP_CHECK, bool bSelf = true)
+	
+	void Move(AOINode<nDims>* pNode, const AOIPoint<nDims>& newPos, float fBroadcastMin, float fBroadcastMax, uint64_t uKey, int nStep = AOI_STEP_CHECK, bool bSelf = true)
 	{
 		float fMove = newPos[nDim] - pNode->m_pos[nDim];
 		if (bSelf)
@@ -224,49 +237,7 @@ public:
 			CheckStep(pIter, nStep, uKey);
 			pIter = pIter->m_pPrev[m_nDim];
 		}
-		if (fMove < 0.0f)
-		{
-			pStart = pIter;
-		}
 		Remove(pNode);
-	}
-
-
-
-
-	if (!m_pHead)
-	{
-		m_pHead = pNode;
-		m_pTail = pNode;
-		return;
-	}
-
-	bool bUndo = true;
-
-	AOINode<nDims>* pIter = pStart ? pStart : m_pTail;
-	while (pIter)
-	{
-		float fDist = pNode->Bigger(pIter, m_nDim);
-		if (bUndo && fDist > 0)
-		{
-			InsertAfter(pNode, pIter);
-			bUndo = false;
-		}
-		if (fDist >= -fBroadcastMax && fDist <= fBroadcastMin)
-		{
-			CheckStep(pIter, nStep, uKey);
-		}
-		else if (fDist > fBroadcastMin)
-		{
-			return;
-
-		}
-		pIter = pIter->m_pPrev[m_nDim];
-	}
-
-	if (bUndo)
-	{
-		InsertBefore(pNode, m_pHead);
 	}
 };
 #endif

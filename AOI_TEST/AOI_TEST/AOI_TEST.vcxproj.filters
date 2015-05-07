@@ -30,7 +30,10 @@
     <ClInclude Include="AOINode.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="AOIPoint.h">
+    <ClInclude Include="AOIBlock.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AOIVector.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
