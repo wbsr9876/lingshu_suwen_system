@@ -83,6 +83,7 @@
   <ItemGroup>
     <ClInclude Include="AOIBlock.h" />
     <ClInclude Include="AOIList.h" />
+    <ClInclude Include="AOIChecker.h" />
     <ClInclude Include="AOINode.h" />
     <ClInclude Include="AOIVector.h" />
     <ClInclude Include="stdafx.h" />

@@ -2,6 +2,7 @@
 #define _AOI_LIST_H_
 
 #include "AOINode.h"
+#include "AOIChecker.h"
 #include <vector>
 
 enum AOI_STEP
@@ -102,7 +103,7 @@ public:
 			pNext->m_pPrev[m_nDim] = pPrev;
 		}
 	}
-	void CheckStep(AOINode<nDims>* pNode,int nStep,uint64_t uKey)
+	void CheckStep(AOINode<nDims>* pNode,int nStep,uint64_t uKey,AOINode<nDims>* pSender)
 	{
 		if (nStep & AOI_STEP_INIT)
 		{
@@ -115,10 +116,13 @@ public:
 		}
 		if ((nStep & AOI_STEP_OUTPUT) && pNode->m_stCounter.nCount == nDims)
 		{
-			m_pResult->push_back(pNode);
+			if (AOIChecker<nDims>::ListenChecker(pSender, pNode))
+			{
+				m_pResult->push_back(pNode);
+			}	
 		}
 	}
-	void Add(AOINode<nDims>* pNode, float fBroadcastMin, float fBroadcastMax, uint64_t uKey, int nStep = AOI_STEP_CEHCK, bool bSelf = true, AOINode<nDims>* pStart = NULL)
+	void Add_LH(AOINode<nDims>* pNode, float fBroadcastMin, float fBroadcastMax, uint64_t uKey, int nStep = AOI_STEP_CEHCK, bool bUndo = true, bool bSelf = false, AOINode<nDims>* pStart = NULL)
 	{
 		if (bSelf)
 		{
@@ -135,7 +139,52 @@ public:
 			return;
 		}
 
-		bool bUndo = true;
+		//bool bUndo = true;
+
+		AOINode<nDims>* pIter = pStart ? pStart : m_pHead;
+		while (pIter)
+		{
+			float fDist = pNode->Bigger(pIter, m_nDim);
+			if (bUndo && fDist < 0)
+			{
+				InsertBefore(pNode, pIter);
+				bUndo = false;
+			}
+			if (fDist >= -fBroadcastMax && fDist <= fBroadcastMin)
+			{
+				CheckStep(pIter, nStep, uKey,pNode);			
+			}
+			else if (fDist < -fBroadcastMax)
+			{
+				return;
+
+			}
+			pIter = pIter->m_pNext[m_nDim];
+		}
+
+		if (bUndo)
+		{
+			InsertAfter(pNode, m_pTail);
+		}
+	}
+	void Add_HL(AOINode<nDims>* pNode, float fBroadcastMin, float fBroadcastMax, uint64_t uKey, int nStep = AOI_STEP_CEHCK, bool bUndo = true, bool bSelf = false, AOINode<nDims>* pStart = NULL)
+	{
+		if (bSelf)
+		{
+			if (nStep == AOI_STEP_OUTPUT)
+			{
+				m_pResult->push_back(pNode);
+			}
+		}
+
+		if (!m_pHead)
+		{
+			m_pHead = pNode;
+			m_pTail = pNode;
+			return;
+		}
+
+		//bool bUndo = true;
 
 		AOINode<nDims>* pIter = pStart ? pStart : m_pTail;
 		while (pIter)
@@ -148,7 +197,7 @@ public:
 			}
 			if (fDist >= -fBroadcastMax && fDist <= fBroadcastMin)
 			{
-				CheckStep(pIter, nStep, uKey);
+				CheckStep(pIter, nStep, uKey, pNode);
 			}
 			else if (fDist > fBroadcastMin)
 			{
@@ -164,7 +213,7 @@ public:
 		}
 	}
 	
-	void Del(AOINode<nDims>* pNode, float fBroadcastMin, float fBroadcastMax, uint64_t uKey, int nStep = AOI_STEP_CHECK, bool bSelf = true)
+	void Del(AOINode<nDims>* pNode, float fBroadcastMin, float fBroadcastMax, uint64_t uKey, int nStep = AOI_STEP_CHECK, bool bSelf = false)
 	{
 		if (bSelf)
 		{
@@ -182,7 +231,7 @@ public:
 			{
 				break;
 			}
-			CheckStep(pIter, nStep, uKey);
+			CheckStep(pIter, nStep, uKey, pNode);
 			pIter = pIter->m_pNext[m_nDim];
 		}
 		pIter = pNode->m_pPrev[m_nDim];
@@ -193,51 +242,11 @@ public:
 			{
 				break;
 			}
-			CheckStep(pIter, nStep, uKey);
+			CheckStep(pIter, nStep, uKey, pNode);
 			pIter = pIter->m_pPrev[m_nDim];
 		}
 		Remove(pNode);
 	}
-	
-	void Move(AOINode<nDims>* pNode, const AOIPoint<nDims>& newPos, float fBroadcastMin, float fBroadcastMax, uint64_t uKey, int nStep = AOI_STEP_CHECK, bool bSelf = true)
-	{
-		float fMove = newPos[nDim] - pNode->m_pos[nDim];
-		if (bSelf)
-		{
-			if (nStep == AOI_STEP_OUTPUT)
-			{
-				m_pResult->push_back(pNode);
-			}
-		}
-		float fDist = 0.0f;
-		AOINode<nDims>* pStart = NULL;
-		AOINode<nDims>* pIter = pNode->m_pNext[m_nDim];
-		while (pIter)
-		{
-			fDist = pIter->Bigger(pNode, m_nDim);
-			if (fDist > fBroadcastMax)
-			{
-				break;
-			}
-			CheckStep(pIter, nStep, uKey);
-			pIter = pIter->m_pNext[m_nDim];
-		}
-		if (fMove >= 0.0f)
-		{
-			pStart = pIter;
-		}
-		pIter = pNode->m_pPrev[m_nDim];
-		while (pIter)
-		{
-			fDist = pNode->Bigger(pIter, m_nDim);
-			if (fDist > fBroadcastMin)
-			{
-				break;
-			}
-			CheckStep(pIter, nStep, uKey);
-			pIter = pIter->m_pPrev[m_nDim];
-		}
-		Remove(pNode);
-	}
+
 };
 #endif

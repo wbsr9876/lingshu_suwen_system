@@ -10,6 +10,8 @@ public:
 	AOINode<nDims>* m_pPrev[nDims];
 	AOINode<nDims>* m_pNext[nDims];
 	AOIVector<nDims> m_pos;
+	int m_nDeafLevel;
+	int m_nQuietLevel;
 	struct COUNTER
 	{
 		uint64_t uKey;
@@ -19,6 +21,8 @@ public:
 public:
 	AOINode(const AOIVector<nDims>& pos)
 		: m_pos(pos)
+		, m_nDeafLevel(0)
+		, m_nQuietLevel(0)
 	{
 		memset(m_pPrev, 0, sizeof(m_pPrev));
 		memset(m_pNext, 0, sizeof(m_pNext));

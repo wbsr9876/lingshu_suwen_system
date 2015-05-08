@@ -16,6 +16,21 @@ public:
 	{
 		memcpy(coordinate, value, sizeof(coordinate));
 	}
+	AOIVector(float x)
+	{
+		coordinate[0] = x;
+	}
+	AOIVector(float x, float y)
+		: AOIVector(x)
+	{
+		coordinate[1] = y;
+	}
+	AOIVector(float x, float y, float z)
+	{
+		coordinate[0] = x;
+		coordinate[1] = y;
+		coordinate[2] = z;
+	}
 	AOIVector(const AOIVector<nDims>& point)
 	{
 		memcpy(coordinate, point.coordinate, sizeof(coordinate));
@@ -29,7 +44,7 @@ public:
 		memcpy(coordinate, value, sizeof(coordinate));
 		return *this;
 	}
-	AOIVector<nDims> operator+(const AOIVector<nDims>& point)
+	AOIVector<nDims> operator+(const AOIVector<nDims>& point) const
 	{
 		AOIVector result;
 		for (int i = 0; i < nDims;i++)
@@ -38,7 +53,7 @@ public:
 		}
 		return result;
 	}
-	AOIVector<nDims> operator-(const AOIVector<nDims>& point)
+	AOIVector<nDims> operator-(const AOIVector<nDims>& point) const
 	{
 		AOIVector result;
 		for (int i = 0; i < nDims; i++)
@@ -47,7 +62,7 @@ public:
 		}
 		return result;
 	}
-	AOIVector<nDims> operator*(float rate)
+	AOIVector<nDims> operator*(float rate) const
 	{
 		AOIVector result;
 		for (int i = 0; i < nDims; i++)
@@ -56,7 +71,7 @@ public:
 		}
 		return result;
 	}
-	AOIVector<nDims> operator/(float rate)
+	AOIVector<nDims> operator/(float rate) const 
 	{
 		AOIVector result;
 		for (int i = 0; i < nDims; i++)
@@ -65,7 +80,7 @@ public:
 		}
 		return result;
 	}
-	AOIVector<nDims> operator=(const AOIVector<nDims>& point)
+	const AOIVector<nDims>& operator=(const AOIVector<nDims>& point)
 	{
 		memcpy(coordinate, point.coordinate, sizeof(coordinate));
 		return *this;
@@ -75,10 +90,23 @@ public:
 		assert(nDim < nDims && nDim >= 0);
 		return coordinate[nDim];
 	}
-	float operator[](int nDim)const
+	const float& operator[](int nDim) const
 	{
 		assert(nDim < nDims && nDim >= 0);
 		return coordinate[nDim];
+	}
+	float SquaredMagnitude() const
+	{
+		float fRet = 0.0f;
+		for (int i = 0; i < nDims; i++)
+		{
+			fRet += coordinate[i] * coordinate[i];
+		}
+		return fRet;
+	}
+	float Magnitude() const
+	{
+		return sqrt(SquaredMagnitude());
 	}
 };
 #endif
