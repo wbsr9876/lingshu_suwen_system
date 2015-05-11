@@ -17,12 +17,14 @@ template<int nDims> class AOIList
 {
 protected:
 	int m_nDim;
+	int m_nCount;
 	AOINode<nDims>* m_pHead;
 	AOINode<nDims>* m_pTail;
 	std::vector<AOINode<nDims>*>* m_pResult;
 public:
 	AOIList(int nDim)
 		: m_nDim(nDim)
+		, m_nCount(0)
 		, m_pHead(NULL)
 		, m_pTail(NULL)
 		, m_pResult(NULL)
@@ -31,6 +33,7 @@ public:
 	}
 	AOIList()
 		: m_nDim(-1)
+		, m_nCount(0)
 		, m_pHead(NULL)
 		, m_pTail(NULL)
 		, m_pResult(NULL)
@@ -65,6 +68,22 @@ public:
 		{
 			m_pTail = pAfter;
 		}
+		m_nCount++;
+	}
+	void Pushback(AOINode<nDims>* pNode)
+	{
+		if (m_pTail)
+		{
+			InsertAfter(pNode, m_pTail);
+			return;
+		}
+	}
+
+	void FirstInsert(AOINode<nDims>* pNode)
+	{
+		m_pTail = pNode;
+		m_pHead = pNode;
+		m_nCount = 1;
 	}
 	void InsertBefore(AOINode<nDims>* pBefore, AOINode<nDims>* pNode)
 	{
@@ -80,6 +99,7 @@ public:
 		{
 			m_pHead = pBefore;
 		}
+		m_nCount++;
 	}
 	void Remove(AOINode<nDims>* pNode)
 	{
@@ -89,6 +109,7 @@ public:
 			{
 				m_pHead = NULL;
 				m_pTail = NULL;
+				m_nCount = 0;
 			}
 			return;
 		}
@@ -102,19 +123,24 @@ public:
 		{
 			pNext->m_pPrev[m_nDim] = pPrev;
 		}
+		m_nCount--;
 	}
 	void CheckStep(AOINode<nDims>* pNode,int nStep,uint64_t uKey,AOINode<nDims>* pSender)
 	{
+		if (pNode->m_bInvaild)
+		{
+			return;
+		}
 		if (nStep & AOI_STEP_INIT)
 		{
 			pNode->m_stCounter.uKey = uKey;
-			pNode->m_stCounter.nCount = 0;
+			pNode->m_stCounter.nMask = 0;
 		}
 		if ((nStep & AOI_STEP_CEHCK) && pNode->m_stCounter.uKey == uKey)
 		{
-			pNode->m_stCounter.nCount++;
+			pNode->m_stCounter.nMask |= 1 << m_nDim;
 		}
-		if ((nStep & AOI_STEP_OUTPUT) && pNode->m_stCounter.nCount == nDims)
+		if ((nStep & AOI_STEP_OUTPUT) && pNode->m_stCounter.nMask == (1 << nDims) - 1)
 		{
 			if (AOIChecker<nDims>::ListenChecker(pSender, pNode))
 			{
@@ -134,8 +160,7 @@ public:
 
 		if (!m_pHead)
 		{
-			m_pHead = pNode;
-			m_pTail = pNode;
+			FirstInsert(pNode);
 			return;
 		}
 
@@ -179,8 +204,7 @@ public:
 
 		if (!m_pHead)
 		{
-			m_pHead = pNode;
-			m_pTail = pNode;
+			FirstInsert(pNode);
 			return;
 		}
 
@@ -246,6 +270,28 @@ public:
 			pIter = pIter->m_pPrev[m_nDim];
 		}
 		Remove(pNode);
+	}
+
+	void Splite(const AOIVector<nDims>& midPoint, AOIList<nDims>** pList)
+	{
+		AOINode<nDims>* pIter = m_pHead;
+		while (pIter)
+		{
+			int nMask = 0;
+			for (int i = 0; i < nDims;i++)
+			{
+				nMask |= pIter->Bigger(midPoint, i) > 0.0f? (1 << i) : 0;
+			}
+			AOINode<nDims>* pTemp = pIter->m_pNext[m_nDim];
+			pList[nMask][m_nDim].Pushback(pIter);
+			if (pIter == m_pTail)
+			{
+				break;
+			}
+			pIter = pTemp;
+		}
+		m_pHead = NULL;
+		m_pTail = NULL;
 	}
 
 };

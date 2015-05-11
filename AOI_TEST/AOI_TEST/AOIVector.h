@@ -21,8 +21,8 @@ public:
 		coordinate[0] = x;
 	}
 	AOIVector(float x, float y)
-		: AOIVector(x)
 	{
+		coordinate[0] = x;
 		coordinate[1] = y;
 	}
 	AOIVector(float x, float y, float z)

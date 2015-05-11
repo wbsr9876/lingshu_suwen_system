@@ -34,7 +34,7 @@ template<int nDims> class AOIBlock
 protected:
 	AOIVector<nDims> m_min;
 	AOIVector<nDims> m_max;
-	AOINode<nDims> m_midNode;
+	AOIVector<nDims> m_midVector;
 	AOIList<nDims> m_coordinate[nDims];
 	int m_nType;
 	AOIBlock<nDims>* m_pSubBlockList[1<<nDims];
@@ -44,7 +44,7 @@ public:
 	AOIBlock(const AOIVector<nDims>& min, const AOIVector<nDims>& max, AOIBlock<nDims>* pParent)
 		: m_min(min)
 		, m_max(max)
-		, m_midNode((m_max + m_min) / 2)
+		, m_midVector((m_max + m_min) / 2)
 		, m_nType(0)
 		, m_pParent(pParent)
 		, m_uKey(0)
@@ -56,11 +56,6 @@ public:
 		for (int i = 0;i < nDims;i++)
 		{
 			m_coordinate[i].SetDim(i);
-		}
-		uint64_t uKey = GenerateKey();
-		for (int i = 0; i < nDims; i++)
-		{
-			m_coordinate[i].Add_LH(&m_midNode, 0, 0, uKey);
 		}
 	}
 	~AOIBlock()
@@ -74,9 +69,11 @@ public:
 	}
 	void Splite()
 	{
+		AOIList<nDims>* pList[1 << nDims];
 		AOIVector<nDims> center = (m_max + m_min) / 2;
 		AOIVector<nDims> vec = center - m_min;
 		m_pSubBlockList[0] = new AOIBlock<nDims>(m_min, center, this);
+		pList[0] = m_pSubBlockList[0]->m_coordinate;
 		for (int i = 0; i < nDims; i++)
 		{
 			int mid = 1 << i;
@@ -85,7 +82,12 @@ public:
 				AOIVector<nDims> temp = m_pSubBlockList[j]->m_min;
 				temp[i] = center[i];
 				m_pSubBlockList[j + mid] = new AOIBlock<nDims>(temp, temp + vec,this);
+				pList[j + mid] = m_pSubBlockList[j + mid]->m_coordinate;
 			}
+		}
+		for (int i = 0; i < nDims;i++)
+		{
+			m_coordinate[i].Splite(m_midVector, pList);
 		}
 	}
 
@@ -100,7 +102,7 @@ public:
 			int nMask = 0;
 			for (int i = 0; i < nDims;i++)
 			{
-				if (pos[i] > m_midNode.m_pos[i])
+				if (pos[i] > m_midVector[i])
 					nMask |= 1 << i;
 			}
 			return m_pSubBlockList[nMask]->Add(pos, fBroadcastMin, fBroadcastMax, pResult);
@@ -120,7 +122,7 @@ public:
 				nCheck |= AOI_STEP_OUTPUT;
 
 			}
-			if (m_midNode.Bigger(pNode,i))
+			if (pNode->Bigger(m_midVector,i) <= 0.0f)
 			{
 				m_coordinate[i].Add_LH(pNode, fBroadcastMin, fBroadcastMax, uKey, nCheck);
 			}
