@@ -31,7 +31,14 @@ public:
 
 	bool Cross(const AOICube<nDims>& cube)
 	{
-		return false;
+		for (int i = 0; i < nDims;i++)
+		{
+			if (Less(cube.m_max,m_min) || More(cube.m_min,m_max)
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 };
 #endif

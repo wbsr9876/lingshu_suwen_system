@@ -186,6 +186,27 @@ public:
 	void Notify(AOINode<nDims>* pNode, float fBroadcastMin, float fBroadcastMax, std::vector<AOINode<3>*>* pResult)
 	{
 		AOICube<nDims> cube(pNode->m_pos, fBroadcastMin, fBroadcastMax);
+		Notify(cube, pResult);
+
+	}
+	void Notify(const AOICube<nDims>& cube, std::vector<AOINode<3>*>* pResult)
+	{
+		if (m_cube.Cross(cube))
+		{
+			if (m_nType & PARENT_BLOCK)
+			{
+				for (int i = 0; i < 1 << nDims;i++)
+				{
+					Notify(cube, pResult);
+				}
+				return;
+			}
+			else
+			{
+
+			}
+		}
+		return;
 	}
 };
 #endif
