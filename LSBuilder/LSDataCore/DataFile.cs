@@ -39,7 +39,7 @@ namespace LSDataCore
                         }
                     }
                 }
-                catch(System.Exception e)
+                catch
                 {
                     binary.Close();
                     return CommonDefine.EC_UNKNOWN_ERROR | CommonDefine.CT_DATAFILE;
