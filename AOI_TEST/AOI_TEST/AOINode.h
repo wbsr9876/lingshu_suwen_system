@@ -43,6 +43,7 @@ public:
 	{
 
 	}
+
 	void SetPos(const AOIVector<nDims>& pos)
 	{
 		m_pos = pos;

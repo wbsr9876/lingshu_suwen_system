@@ -39,6 +39,12 @@
     <ClInclude Include="AOIChecker.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="AOIDefine.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AOICube.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

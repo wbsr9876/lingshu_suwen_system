@@ -80,6 +80,24 @@ public:
 		}
 		return result;
 	}
+	AOIVector<nDims> operator+(float delta) const
+	{
+		AOIVector result;
+		for (int i = 0; i < nDims; i++)
+		{
+			result.coordinate[i] = coordinate[i] + delta;
+		}
+		return result;
+	}
+	AOIVector<nDims> operator-(float delta) const
+	{
+		AOIVector result;
+		for (int i = 0; i < nDims; i++)
+		{
+			result.coordinate[i] = coordinate[i] - delta;
+		}
+		return result;
+	}
 	const AOIVector<nDims>& operator=(const AOIVector<nDims>& point)
 	{
 		memcpy(coordinate, point.coordinate, sizeof(coordinate));
@@ -109,4 +127,21 @@ public:
 		return sqrt(SquaredMagnitude());
 	}
 };
+
+//unused
+template<int nDims> AOIVector<nDims>* GetVertex(const AOIVector<nDims>& max, const AOIVector<nDims>& min)
+{
+	AOIVector<nDims>* pResult = new AOIVector<nDims>[1 << nDims];
+	pResult[0] = max;
+	for (int i = 0; i < nDims; i++)
+	{
+		int mid = 1 << i;
+		for (int j = 0; j < mid; j++)
+		{
+			pResult[j + mid] = pResult[j];
+			pResult[j + mid][i] = min[i];
+		}
+	}
+	return pResult;
+}
 #endif

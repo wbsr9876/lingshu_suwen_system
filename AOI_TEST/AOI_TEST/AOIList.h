@@ -1,17 +1,12 @@
 #ifndef _AOI_LIST_H_
 #define _AOI_LIST_H_
 
+#include "AOIDefine.h"
 #include "AOINode.h"
 #include "AOIChecker.h"
 #include <vector>
 
-enum AOI_STEP
-{
-	AOI_STEP_INIT = 0x1,
-	AOI_STEP_CEHCK = 0x2,
-	AOI_STEP_OUTPUT = 0x4,
 
-};
 
 template<int nDims> class AOIList
 {
@@ -77,12 +72,18 @@ public:
 			InsertAfter(pNode, m_pTail);
 			return;
 		}
+		else
+		{
+			FirstInsert(pNode);
+		}
 	}
 
 	void FirstInsert(AOINode<nDims>* pNode)
 	{
 		m_pTail = pNode;
 		m_pHead = pNode;
+		pNode->m_pNext[m_nDim] = NULL;
+		pNode->m_pPrev[m_nDim] = NULL;
 		m_nCount = 1;
 	}
 	void InsertBefore(AOINode<nDims>* pBefore, AOINode<nDims>* pNode)
@@ -170,16 +171,16 @@ public:
 		while (pIter)
 		{
 			float fDist = pNode->Bigger(pIter, m_nDim);
-			if (bUndo && fDist < 0)
+			if (bUndo && Less(fDist,0.0f))
 			{
 				InsertBefore(pNode, pIter);
 				bUndo = false;
 			}
-			if (fDist >= -fBroadcastMax && fDist <= fBroadcastMin)
+			if (!Less(fDist,-fBroadcastMax) && !More(fDist,fBroadcastMin))
 			{
 				CheckStep(pIter, nStep, uKey,pNode);			
 			}
-			else if (fDist < -fBroadcastMax)
+			else if (Less(fDist,-fBroadcastMax))
 			{
 				return;
 
@@ -214,16 +215,16 @@ public:
 		while (pIter)
 		{
 			float fDist = pNode->Bigger(pIter, m_nDim);
-			if (bUndo && fDist > 0)
+			if (bUndo && More(fDist,0.0f))
 			{
 				InsertAfter(pNode, pIter);
 				bUndo = false;
 			}
-			if (fDist >= -fBroadcastMax && fDist <= fBroadcastMin)
+			if (!Less(fDist, -fBroadcastMax) && !More(fDist, fBroadcastMin))
 			{
 				CheckStep(pIter, nStep, uKey, pNode);
 			}
-			else if (fDist > fBroadcastMin)
+			else if (More(fDist,fBroadcastMin))
 			{
 				return;
 
@@ -247,27 +248,43 @@ public:
 			}
 		}
 		float fDist = 0.0f;
-		AOINode<nDims>* pIter = pNode->m_pNext[m_nDim];
-		while (pIter)
+		AOINode<nDims>* pIter = NULL;
+		if (pNode != m_pTail)
 		{
-			fDist = pIter->Bigger(pNode, m_nDim);
-			if (fDist > fBroadcastMax)
+			pIter = pNode->m_pNext[m_nDim];
+
+			while (pIter)
 			{
-				break;
+				fDist = pIter->Bigger(pNode, m_nDim);
+				if (More(fDist, fBroadcastMax))
+				{
+					break;
+				}
+				CheckStep(pIter, nStep, uKey, pNode);
+				if (pIter == m_pTail)
+				{
+					break;
+				}
+				pIter = pIter->m_pNext[m_nDim];
 			}
-			CheckStep(pIter, nStep, uKey, pNode);
-			pIter = pIter->m_pNext[m_nDim];
 		}
-		pIter = pNode->m_pPrev[m_nDim];
-		while (pIter)
+		if (pNode != m_pHead)
 		{
-			fDist = pNode->Bigger(pIter, m_nDim);
-			if (fDist > fBroadcastMin)
+			pIter = pNode->m_pPrev[m_nDim];
+			while (pIter)
 			{
-				break;
+				fDist = pNode->Bigger(pIter, m_nDim);
+				if (More(fDist, fBroadcastMin))
+				{
+					break;
+				}
+				CheckStep(pIter, nStep, uKey, pNode);
+				if (pIter == m_pHead)
+				{
+					break;
+				}
+				pIter = pIter->m_pPrev[m_nDim];
 			}
-			CheckStep(pIter, nStep, uKey, pNode);
-			pIter = pIter->m_pPrev[m_nDim];
 		}
 		Remove(pNode);
 	}
@@ -280,7 +297,7 @@ public:
 			int nMask = 0;
 			for (int i = 0; i < nDims;i++)
 			{
-				nMask |= pIter->Bigger(midPoint, i) > 0.0f? (1 << i) : 0;
+				nMask |= More(pIter->Bigger(midPoint, i),0.0f)? (1 << i) : 0;
 			}
 			AOINode<nDims>* pTemp = pIter->m_pNext[m_nDim];
 			pList[nMask][m_nDim].Pushback(pIter);
@@ -292,6 +309,7 @@ public:
 		}
 		m_pHead = NULL;
 		m_pTail = NULL;
+		m_nCount = 0;
 	}
 
 };

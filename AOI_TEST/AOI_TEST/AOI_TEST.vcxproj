@@ -82,6 +82,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AOIBlock.h" />
+    <ClInclude Include="AOICube.h" />
+    <ClInclude Include="AOIDefine.h" />
     <ClInclude Include="AOIList.h" />
     <ClInclude Include="AOIChecker.h" />
     <ClInclude Include="AOINode.h" />
