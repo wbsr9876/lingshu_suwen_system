@@ -16,39 +16,7 @@ protected:
 	AOINode<nDims>* m_pHead;
 	AOINode<nDims>* m_pTail;
 	std::vector<AOINode<nDims>*>* m_pResult;
-public:
-	AOIList(int nDim)
-		: m_nDim(nDim)
-		, m_nCount(0)
-		, m_pHead(NULL)
-		, m_pTail(NULL)
-		, m_pResult(NULL)
-	{
 
-	}
-	AOIList()
-		: m_nDim(-1)
-		, m_nCount(0)
-		, m_pHead(NULL)
-		, m_pTail(NULL)
-		, m_pResult(NULL)
-	{
-
-	}
-	~AOIList()
-	{
-
-	}
-
-	void SetDim(int nDim)
-	{
-		m_nDim = nDim;
-	}
-
-	void SetResult(std::vector<AOINode<nDims>*>* pResult)
-	{
-		m_pResult = pResult;
-	}
 	void InsertAfter(AOINode<nDims>* pAfter, AOINode<nDims>* pNode)
 	{
 		AOINode<nDims>* pTemp = pNode->m_pNext[m_nDim];
@@ -126,7 +94,7 @@ public:
 		}
 		m_nCount--;
 	}
-	void CheckStep(AOINode<nDims>* pNode,int nStep,uint64_t uKey,AOINode<nDims>* pSender)
+	void CheckStep(AOINode<nDims>* pNode, int nStep, uint64_t uKey, AOINode<nDims>* pSender)
 	{
 		if (pNode->m_bInvaild)
 		{
@@ -146,9 +114,43 @@ public:
 			if (AOIChecker<nDims>::ListenChecker(pSender, pNode))
 			{
 				m_pResult->push_back(pNode);
-			}	
+			}
 		}
 	}
+public:
+	AOIList(int nDim)
+		: m_nDim(nDim)
+		, m_nCount(0)
+		, m_pHead(NULL)
+		, m_pTail(NULL)
+		, m_pResult(NULL)
+	{
+
+	}
+	AOIList()
+		: m_nDim(-1)
+		, m_nCount(0)
+		, m_pHead(NULL)
+		, m_pTail(NULL)
+		, m_pResult(NULL)
+	{
+
+	}
+	~AOIList()
+	{
+
+	}
+
+	void SetDim(int nDim)
+	{
+		m_nDim = nDim;
+	}
+
+	void SetResult(std::vector<AOINode<nDims>*>* pResult)
+	{
+		m_pResult = pResult;
+	}
+
 	void Add_LH(AOINode<nDims>* pNode, float fBroadcastMin, float fBroadcastMax, uint64_t uKey, int nStep = AOI_STEP_CEHCK, bool bUndo = true, bool bSelf = false, AOINode<nDims>* pStart = NULL)
 	{
 		if (bSelf)

@@ -33,74 +33,8 @@ protected:
 	{
 		Unlock();
 	}
-public:
-	AOIBlock(const AOIVector<nDims>& min, const AOIVector<nDims>& max, AOIBlock<nDims>* pParent)
-		: m_cube(min,max)
-		, m_nType(0)
-		, m_pParent(pParent)
-		, m_uKey(0)
-	{
-		if (pParent)
-		{
-			m_uKey = pParent->m_uKey;
-		}
-		for (int i = 0;i < nDims;i++)
-		{
-			m_coordinate[i].SetDim(i);
-		}
-	}
-	~AOIBlock()
-	{
 
-	}
-	
-	AOIBlock<nDims>* GetSubBlock(int nIndex)
-	{
-		if (m_nType & PARENT_BLOCK)
-		{
-			if (nIndex < 0 || nIndex > 1 << nDims)
-			{
-				return NULL;
-			}
-			return m_pSubBlockList[nIndex];
-		}
-		return NULL;
-	}
-	void Splite()
-	{
-		Lock();
-		if (m_nType & INVAILD_BLOCK)
-		{
-			return;
-		}
-		if (m_nType & PARENT_BLOCK)
-		{
-			return;
-		}
-		AOIList<nDims>* pList[1 << nDims];
-		AOIVector<nDims> center = (m_cube.m_max + m_cube.m_min) / 2;
-		AOIVector<nDims> vec = center - m_cube.m_min;
-		m_pSubBlockList[0] = new AOIBlock<nDims>(m_cube.m_min, center, this);
-		pList[0] = m_pSubBlockList[0]->m_coordinate;
-		for (int i = 0; i < nDims; i++)
-		{
-			int mid = 1 << i;
-			for (int j = 0; j < mid; j++)
-			{
-				AOIVector<nDims> temp = m_pSubBlockList[j]->m_cube.m_min;
-				temp[i] = center[i];
-				m_pSubBlockList[j + mid] = new AOIBlock<nDims>(temp, temp + vec,this);
-				pList[j + mid] = m_pSubBlockList[j + mid]->m_coordinate;
-			}
-		}
-		for (int i = 0; i < nDims;i++)
-		{
-			m_coordinate[i].Splite(m_cube.m_mid, pList);
-		}
-		m_nType |= PARENT_BLOCK;
-		Unlock();
-	}
-	AOINode<nDims>* __Notify(const AOIVector<nDims>& pos, float fBroadcastMin, float fBroadcastMax, std::vector<AOINode<3>*>* pResult,bool bAdd = false)
+	AOINode<nDims>* __Notify(const AOIVector<nDims>& pos, float fBroadcastMin, float fBroadcastMax, std::vector<AOINode<3>*>* pResult, bool bAdd = false)
 	{
 		if (m_nType & INVAILD_BLOCK)
 		{
@@ -113,16 +47,16 @@ public:
 			int nMask = 0;
 			for (int i = 0; i < nDims; i++)
 			{
-				if (pos[i] > m_cube.m_mid[i])
-					nMask |= 1 << i;
+			if (pos[i] > m_cube.m_mid[i])
+			nMask |= 1 << i;
 			}
 			return m_pSubBlockList[nMask]->__Notify(pos, fBroadcastMin, fBroadcastMax, pResult,bAdd);
 			*/
 		}
-// 		if (bAdd)
-// 		{
-// 			printf("Add %.2f,%.2f,%.2f In %.2f,%.2f,%.2f To %.2f,%.2f,%.2f\n", pos[0], pos[1], pos[2], m_cube.m_max[0], m_cube.m_max[1], m_cube.m_max[2], m_cube.m_min[0], m_cube.m_min[1], m_cube.m_min[2]);
-// 		}
+		// 		if (bAdd)
+		// 		{
+		// 			printf("Add %.2f,%.2f,%.2f In %.2f,%.2f,%.2f To %.2f,%.2f,%.2f\n", pos[0], pos[1], pos[2], m_cube.m_max[0], m_cube.m_max[1], m_cube.m_max[2], m_cube.m_min[0], m_cube.m_min[1], m_cube.m_min[2]);
+		// 		}
 		AOINode<nDims>* pNode = new AOINode<nDims>(pos);
 		uint64_t uKey = GenerateKey();
 		m_coordinate[nDims - 1].SetResult(pResult);
@@ -174,16 +108,16 @@ public:
 			int nMask = 0;
 			for (int i = 0; i < nDims; i++)
 			{
-				if (pNode->Bigger(m_cube.m_mid, i) > 0.0f)
-					nMask |= 1 << i;
+			if (pNode->Bigger(m_cube.m_mid, i) > 0.0f)
+			nMask |= 1 << i;
 			}
 			return m_pSubBlockList[nMask]->Del(pNode, fBroadcastMin, fBroadcastMax, pResult);
 			*/
 		}
 
-// 		{
-// 			printf("Del %.2f,%.2f,%.2f In %.2f,%.2f,%.2f To %.2f,%.2f,%.2f\n", pNode->m_pos[0], pNode->m_pos[1], pNode->m_pos[2], m_cube.m_max[0], m_cube.m_max[1], m_cube.m_max[2], m_cube.m_min[0], m_cube.m_min[1], m_cube.m_min[2]);
-// 		}
+		// 		{
+		// 			printf("Del %.2f,%.2f,%.2f In %.2f,%.2f,%.2f To %.2f,%.2f,%.2f\n", pNode->m_pos[0], pNode->m_pos[1], pNode->m_pos[2], m_cube.m_max[0], m_cube.m_max[1], m_cube.m_max[2], m_cube.m_min[0], m_cube.m_min[1], m_cube.m_min[2]);
+		// 		}
 		uint64_t uKey = GenerateKey();
 		m_coordinate[nDims - 1].SetResult(pResult);
 		for (int i = 0; i < nDims; i++)
@@ -204,12 +138,7 @@ public:
 		ReleaseKey();
 		return pNode;
 	}
-	AOINode<nDims>* Add(const AOIVector<nDims>& pos, float fBroadcastMin, float fBroadcastMax, std::vector<AOINode<3>*>* pResult)
-	{
-		AOICube<nDims> cube(pos, fBroadcastMin, fBroadcastMax);
-		return Add(pos, fBroadcastMin, fBroadcastMax, pResult, cube);
 
-	}
 	AOINode<nDims>* Add(const AOIVector<nDims>& pos, float fBroadcastMin, float fBroadcastMax, std::vector<AOINode<3>*>* pResult, const AOICube<nDims>& cube)
 	{
 		if (m_nType & INVAILD_BLOCK)
@@ -222,10 +151,10 @@ public:
 			{
 				AOINode<nDims>* pRet = NULL;
 				AOINode<nDims>* pTemp = NULL;
-				for (int i = 0; i < 1 << nDims;i++)
+				for (int i = 0; i < 1 << nDims; i++)
 				{
 					pTemp = m_pSubBlockList[i]->Add(pos, fBroadcastMin, fBroadcastMax, pResult, cube);
-						pRet = pRet ? pRet : pTemp;
+					pRet = pRet ? pRet : pTemp;
 				}
 				return pRet;
 			}
@@ -238,17 +167,12 @@ public:
 				else
 				{
 					return __Notify(pos, fBroadcastMin, fBroadcastMax, pResult);
-				}	
+				}
 			}
 		}
 		return NULL;
 	}
-	void Del(AOINode<nDims>* pNode, float fBroadcastMin, float fBroadcastMax, std::vector<AOINode<3>*>* pResult)
-	{
-		AOICube<nDims> cube(pNode->m_pos, fBroadcastMin, fBroadcastMax);
-		Del(pNode, fBroadcastMin, fBroadcastMax, pResult,cube);
 
-	}
 	void Del(AOINode<nDims>* pNode, float fBroadcastMin, float fBroadcastMax, std::vector<AOINode<3>*>* pResult, const AOICube<nDims>& cube)
 	{
 		if (m_nType & INVAILD_BLOCK)
@@ -278,6 +202,84 @@ public:
 			}
 		}
 		return;
+	}
+public:
+	AOIBlock(const AOIVector<nDims>& min, const AOIVector<nDims>& max, AOIBlock<nDims>* pParent)
+		: m_cube(min,max)
+		, m_nType(0)
+		, m_pParent(pParent)
+		, m_uKey(0)
+	{
+		if (pParent)
+		{
+			m_uKey = pParent->m_uKey;
+		}
+		for (int i = 0;i < nDims;i++)
+		{
+			m_coordinate[i].SetDim(i);
+		}
+	}
+	~AOIBlock()
+	{
+
+	}
+	AOIBlock<nDims>* GetSubBlock(int nIndex)
+	{
+		if (m_nType & PARENT_BLOCK)
+		{
+			if (nIndex < 0 || nIndex > 1 << nDims)
+			{
+				return NULL;
+			}
+			return m_pSubBlockList[nIndex];
+		}
+		return NULL;
+	}
+	void Splite()
+	{
+		Lock();
+		if (m_nType & INVAILD_BLOCK)
+		{
+			return;
+		}
+		if (m_nType & PARENT_BLOCK)
+		{
+			return;
+		}
+		AOIList<nDims>* pList[1 << nDims];
+		AOIVector<nDims> center = (m_cube.m_max + m_cube.m_min) / 2;
+		AOIVector<nDims> vec = center - m_cube.m_min;
+		m_pSubBlockList[0] = new AOIBlock<nDims>(m_cube.m_min, center, this);
+		pList[0] = m_pSubBlockList[0]->m_coordinate;
+		for (int i = 0; i < nDims; i++)
+		{
+			int mid = 1 << i;
+			for (int j = 0; j < mid; j++)
+			{
+				AOIVector<nDims> temp = m_pSubBlockList[j]->m_cube.m_min;
+				temp[i] = center[i];
+				m_pSubBlockList[j + mid] = new AOIBlock<nDims>(temp, temp + vec,this);
+				pList[j + mid] = m_pSubBlockList[j + mid]->m_coordinate;
+			}
+		}
+		for (int i = 0; i < nDims;i++)
+		{
+			m_coordinate[i].Splite(m_cube.m_mid, pList);
+		}
+		m_nType |= PARENT_BLOCK;
+		Unlock();
+	}
+	AOINode<nDims>* Add(const AOIVector<nDims>& pos, float fBroadcastMin, float fBroadcastMax, std::vector<AOINode<3>*>* pResult)
+	{
+		AOICube<nDims> cube(pos, fBroadcastMin, fBroadcastMax);
+		return Add(pos, fBroadcastMin, fBroadcastMax, pResult, cube);
+
+	}
+	void Del(AOINode<nDims>* pNode, float fBroadcastMin, float fBroadcastMax, std::vector<AOINode<3>*>* pResult)
+	{
+		AOICube<nDims> cube(pNode->m_pos, fBroadcastMin, fBroadcastMax);
+		Del(pNode, fBroadcastMin, fBroadcastMax, pResult,cube);
+
 	}
 };
 #endif
