@@ -25,16 +25,24 @@ int _tmain(int argc, _TCHAR* argv[])
 		{ 5, 6, 7 }
 	};
 	AOINode<3> node[8];
+
+	test.Splite();
+
 	for (int i = 0; i < 8; i++)
 	{
 		AOINode<3>* pNode = test.Add(AOIVector<3>(v[i]), 2.0f, 2.0f, &vecResult);
-		vecNodes.push_back(pNode);
+		if (pNode)
+		{
+			vecNodes.push_back(pNode);
+		}
 		printf("broadcast count:%u\n", vecResult.size());
 		vecResult.clear();
 	}
 	
 	test.Splite();
 	test.GetSubBlock(0)->Splite();
+	test.GetSubBlock(5)->Splite();
+	test.GetSubBlock(7)->Splite();
 	for (std::vector<AOINode<3>*>::iterator iter = vecNodes.begin(); iter != vecNodes.end();++iter)
 	{
 		test.Del(*iter, 2.0f, 2.0f, &vecResult);

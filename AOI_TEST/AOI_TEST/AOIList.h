@@ -161,7 +161,10 @@ public:
 
 		if (!m_pHead)
 		{
-			FirstInsert(pNode);
+			if (bUndo)
+			{
+				FirstInsert(pNode);
+			}	
 			return;
 		}
 
@@ -205,7 +208,10 @@ public:
 
 		if (!m_pHead)
 		{
-			FirstInsert(pNode);
+			if (bUndo)
+			{
+				FirstInsert(pNode);
+			}
 			return;
 		}
 
@@ -297,7 +303,7 @@ public:
 			int nMask = 0;
 			for (int i = 0; i < nDims;i++)
 			{
-				nMask |= More(pIter->Bigger(midPoint, i),0.0f)? (1 << i) : 0;
+				nMask |= !Less(pIter->Bigger(midPoint, i),0.0f)? (1 << i) : 0;
 			}
 			AOINode<nDims>* pTemp = pIter->m_pNext[m_nDim];
 			pList[nMask][m_nDim].Pushback(pIter);

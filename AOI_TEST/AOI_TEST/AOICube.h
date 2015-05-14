@@ -33,7 +33,18 @@ public:
 	{
 		for (int i = 0; i < nDims;i++)
 		{
-			if (Less(cube.m_max,m_min) || More(cube.m_min,m_max)
+			if (Less(cube.m_max[i],m_min[i]) || More(cube.m_min[i],m_max[i]))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	bool Inside(const AOIVector<nDims>& point)
+	{
+		for (int i = 0; i < nDims; i++)
+		{
+			if (Less(point[i], m_min[i]) || !Less(point[i],m_max[i]))
 			{
 				return false;
 			}
