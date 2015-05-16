@@ -92,6 +92,14 @@ protected:
 		{
 			pNext->m_pPrev[m_nDim] = pPrev;
 		}
+		if (m_pHead == pNode)
+		{
+			m_pHead = pNode->m_pNext[m_nDim];
+		}
+		if (m_pTail == pNode)
+		{
+			m_pTail = pNode->m_pPrev[m_nDim];
+		}
 		m_nCount--;
 	}
 	void CheckStep(AOINode<nDims>* pNode, int nStep, uint64_t uKey, AOINode<nDims>* pSender)

@@ -44,6 +44,12 @@ public:
 
 	}
 
+	void Clear()
+	{
+		memset(m_pPrev, 0, sizeof(m_pPrev));
+		memset(m_pNext, 0, sizeof(m_pNext));
+	}
+
 	void SetPos(const AOIVector<nDims>& pos)
 	{
 		m_pos = pos;
